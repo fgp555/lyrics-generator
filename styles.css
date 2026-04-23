@@ -1,5 +1,8 @@
+/* Import custom fonts from Google Fonts */
 @import url("https://fonts.googleapis.com/css2?family=Protest+Revolution&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+
+/* Reset default styles and apply global font */
 * {
   margin: 0;
   padding: 0;
@@ -7,113 +10,126 @@
   box-sizing: border-box;
   font-family: "Roboto", sans-serif;
 }
+
+/* Center main content using body as flex container */
 body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center; /* vertical center */
+  justify-content: center; /* horizontal center */
+
   background-color: indigo;
   color: white;
   font:
     normal 2vw "Roboto",
     sans-serif;
   --max-width: 40em;
-  background-image: url(assets/bg.webp);
-  background-size: cover;
   text-align: center;
   overflow: hidden;
 }
+
+/* Dark overlay layer on top of background image */
 body::after {
   content: "";
   position: absolute;
-  background-color: #0008;
   background-color: #0006;
   width: 100%;
   height: 100%;
   inset: 0;
   z-index: -1;
 }
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url(assets/bg.webp);
+  background-size: cover;
+  background-position: center;
+  z-index: -2;
+
+  animation: bgCinematic 25s ease-in-out infinite alternate;
+}
+
+/* Combined pan + zoom animation */
+@keyframes bgCinematic {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.1) translate(-2%, -2%);
+  }
+}
+
+/* Main container centered with vertical layout */
 section {
   height: 100vh;
   display: flex;
-  /* align-items: center; */
   justify-content: center;
   flex-direction: column;
   width: var(--max-width);
   margin: auto;
 }
 
+/* Hide line breaks by default */
 br {
   display: none;
 }
+
+/* Hide all paragraphs by default */
 p {
   display: none;
 }
+
+/* Show active paragraph only */
 .p {
   display: block;
   margin: 0;
   padding: 0;
 }
-/*  */
+
+/* English text styling (main focus text) */
 .main_en p {
   font-weight: 900;
-
-  /* font-size: 2.4em; */
   font-size: 2.8em;
-  /* font-family: "Protest Revolution", sans-serif; */
-  /* font-weight: 400; */
-  /* font-style: normal; */
-  /* margin: 1em 0; */
-  /* background-color: coral; */
-  /* background-color: darkorchid; */
-  /* background-color: indianred; */
   padding: 1em;
-  /* background: #ecb207;
-  background: linear-gradient(to bottom, #ffffff 0%, #cdcdcd 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent; */
   color: white;
   margin: 0;
   padding: 0;
 }
+
+/* Spanish text styling (secondary translation text) */
 .main_es p {
   font-weight: 700;
-
-  /* position: absolute; */
-  /* background-color: #333c; */
-  /* background-color: purple; */
-  /* background-color: indigo; */
-  /* background: #ecb207;
-  background: linear-gradient(to bottom, #f9bc04 0%, #886602 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent; */
   color: goldenrod;
-  /* background: #0002; */
-  /* color: white; */
-  /* background: #daa520; */
-  /* color: gold; */
-  /* color: orange; */
-  /* color: #000; */
-
   bottom: 1em;
   font-size: 1.4em;
   padding: 1em 0;
   margin: 1em 0;
 }
-/* ========== Select... ========== */
+
+/* ========== Select control ========== */
+
+/* Position and hide select by default */
 select {
   position: fixed;
   bottom: 0.3em;
   right: 0.3em;
-  opacity: 0.5;
   padding: 0.3em;
   opacity: 0;
   font-size: 1em;
   margin: 1em;
 }
+
+/* Show select on hover for interaction */
 select:hover {
   opacity: 1;
   cursor: pointer;
 }
-/* ========== Select. ========== */
 
-/* ========== Progress Bar... ========== */
+/* ========== Progress Bar ========== */
+
+/* Background track for progress bar */
 .progress-container {
   background-color: #fff4;
   width: 100%;
@@ -121,41 +137,48 @@ select:hover {
   z-index: 0;
   position: absolute;
   opacity: 0.2;
+  top: 0;
+  /* bottom: 0; */
 }
+
+/* Foreground progress indicator */
 .progress {
   width: 1px;
   height: 3px;
   background: #fff;
-  /* background: goldenrod; */
-  /* background: indianred; */
   opacity: 0.9;
   transition: width 0.1s linear;
   position: fixed;
   z-index: 1;
-  /* background-color: peru; */
 }
-/* ========== Progress Bar. ========== */
+
+/* ========== Chapter indicator ========== */
+
+/* Circular chapter badge in top-left corner */
 .chapter {
   position: absolute;
   font-size: 2em;
   left: 0.5em;
   top: 0.5em;
   color: #fffa;
-  /* color: peru; */
   width: 1.3em;
   height: 1.3em;
-  background-color: indigo;
   background-color: #0008;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
 }
+
+/* Hide inner chapter text by default */
 .chapter span {
   padding: 1em;
   display: none;
 }
 
+/* ========== Footer and time display ========== */
+
+/* Shared styles for footer and time badge */
 footer,
 .chapter_time {
   font-size: 1em;
@@ -165,12 +188,27 @@ footer,
   position: fixed;
   border-radius: 1em;
 }
+
+/* Footer positioned bottom-left */
 footer {
   left: 1em;
   bottom: 1em;
 }
 
+/* Time display positioned bottom-right */
 .chapter_time {
   bottom: 1em;
   right: 1em;
+}
+
+/* Main lyric container centered and constrained */
+.lyric_section {
+  width: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }

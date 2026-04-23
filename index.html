@@ -3,36 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta property="og:image:width" content="600" />
-    <meta property="og:image:height" content="314" />
     <link rel="stylesheet" href="styles.css" />
-    <title>lyric videos</title>
+    <title>Bilingual Lyric Reader</title>
   </head>
   <body>
-    <div class="progress-container">
+    <header class="progress-container">
       <div class="progress" id="progress"></div>
-    </div>
+    </header>
 
-    <header></header>
-    <style>
-      .lyric_section {
-        padding-top: 12rem;
-      }
-    </style>
-    <section class="lyric_section">
-      <main class="main_en"></main>
-      <main class="main_es"></main>
-    </section>
-    <script>
-      let book = "John";
-      let chapter = "Chapter";
-      let version = "English Standard Version";
-      let numChapters = 21;
-    </script>
+    <main class="lyric_section">
+      <div class="main_en"></div>
+      <div class="main_es"></div>
+      <div id="audio-player"></div>
+    </main>
+
     <div class="chapter_time" style="display: none">
       <span class="currentTimeDOM"></span> /
       <span class="durationDOM"></span>
     </div>
+
     <footer style="display: none"></footer>
 
     <script src="script.js" defer></script>
