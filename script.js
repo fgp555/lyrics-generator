@@ -61,7 +61,7 @@ const readTxt = async (numRead = 1) => {
   // location.reload()
 
   //  fetch_en... ==========
-  let url_en = `assets/text_01_en.txt`;
+  let url_en = `assets/text-en.txt`;
   let response_en = await fetch(url_en);
   const txt_en = await response_en.text().then((str) => {
     return str.split("\r"); // return the string after splitting it.
@@ -85,7 +85,7 @@ const readTxt = async (numRead = 1) => {
   //  fetch_en. ==========
 
   //  fetch_es... ==========
-  let url_es = `assets/text_01_es.txt`;
+  let url_es = `assets/text-es.txt`;
   let response_es = await fetch(url_es);
   const txt_es = await response_es.text().then((str) => {
     return str.split("\r"); // return the string after splitting it.
@@ -235,6 +235,6 @@ audioBible.addEventListener(
     currentTimeDOM.innerHTML = convertTime(currentTime);
     durationDOM.innerHTML = convertTime(duration);
   },
-  false
+  false,
 );
 //   ========== time update. ==========

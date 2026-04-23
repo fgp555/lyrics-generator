@@ -10,9 +10,11 @@
 body {
   background-color: indigo;
   color: white;
-  font: normal 2vw "Roboto", sans-serif;
+  font:
+    normal 2vw "Roboto",
+    sans-serif;
   --max-width: 40em;
-  background-image: url(assets/bg-0.webp);
+  background-image: url(assets/bg.webp);
   background-size: cover;
   text-align: center;
   overflow: hidden;
@@ -118,6 +120,7 @@ select:hover {
   height: 3px;
   z-index: 0;
   position: absolute;
+  opacity: 0.2;
 }
 .progress {
   width: 1px;
