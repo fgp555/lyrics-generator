@@ -43,7 +43,7 @@ body::before {
   content: "";
   position: fixed;
   inset: 0;
-  background-image: url(assets/bg.webp);
+  background-image: url(assets/bg.jpg);
   background-size: cover;
   background-position: center;
   z-index: -2;
@@ -101,11 +101,12 @@ p {
 /* Spanish text styling (secondary translation text) */
 .main_es p {
   font-weight: 700;
-  color: goldenrod;
+  color: rgb(247, 188, 41);
   bottom: 1em;
   font-size: 1.4em;
-  padding: 1em 0;
+  padding: 0.5em;
   margin: 1em 0;
+  background: #0002;
 }
 
 /* ========== Select control ========== */
