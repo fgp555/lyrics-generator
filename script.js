@@ -1,42 +1,13 @@
-let book = "John";
-let chapter = "Chapter";
-let version = "English Standard Version";
-let numChapters = 21;
+// ========== audio player ==========
+const audioPlayer = document.querySelector("#audio_player");
 
-// ========== storage ==========
-const STORAGE_KEY = "value";
-const dataStorage = Number(localStorage.getItem(STORAGE_KEY)) || 1;
-localStorage.setItem(STORAGE_KEY, dataStorage);
+audioPlayer.innerHTML = `
+  <audio id="audioID">
+    <source src="assets/audio.mp3" type="audio/mpeg" />
+  </audio>
+`;
 
-// ========== header ==========
-const audioPlayer = () => {
-  document.querySelector("#audio-player").innerHTML = `
-    <div class="title">
-      <h2 class="chapter"><span>${dataStorage}</span></h2>
-    </div>
-    <audio id="bible">
-      <source src="assets/audio.mp3" type="audio/mpeg" />
-    </audio>
-  `;
-};
-audioPlayer();
-
-// ========== select ==========
-const select = document.createElement("select");
-document.body.appendChild(select);
-
-// Fill select options
-for (let i = 1; i <= numChapters; i++) {
-  const option = new Option(i, i);
-  select.appendChild(option);
-}
-select.value = dataStorage;
-
-// On change update storage (no reload needed)
-select.addEventListener("change", () => {
-  localStorage.setItem(STORAGE_KEY, select.value);
-  readTxt(select.value);
-});
+const audio = document.getElementById("audioID");
 
 // ========== render helper ==========
 const renderText = (container, lines, breakOnEmpty = true) => {
@@ -44,11 +15,15 @@ const renderText = (container, lines, breakOnEmpty = true) => {
 
   lines.forEach((line) => {
     if (line.trim().length <= 1) {
-      if (breakOnEmpty) frag.appendChild(document.createElement("br"));
+      if (breakOnEmpty) {
+        frag.appendChild(document.createElement("br"));
+      }
       return;
     }
+
     const p = document.createElement("p");
     p.textContent = line;
+
     frag.appendChild(p);
   });
 
@@ -56,115 +31,141 @@ const renderText = (container, lines, breakOnEmpty = true) => {
   container.appendChild(frag);
 };
 
-// ========== main logic ==========
+// ========== navigation ==========
+let currentIndex = 0;
+let p_en = [];
+let p_es = [];
+
+const updateUI = () => {
+  p_en.forEach((el) => el.classList.remove("p"));
+  p_es.forEach((el) => el.classList.remove("p"));
+
+  currentIndex = Math.max(0, Math.min(currentIndex, p_en.length - 1));
+
+  [p_en[currentIndex], p_es[currentIndex]].forEach((el) => {
+    if (!el) return;
+
+    el.classList.add("p");
+    el.scrollIntoView({
+      block: "center",
+      behavior: "smooth",
+    });
+  });
+};
+
+const setupNavigation = () => {
+  p_en = [...document.querySelectorAll(".text_en p")];
+  p_es = [...document.querySelectorAll(".text_es p")];
+
+  if (!p_en.length || !p_es.length) return;
+
+  updateUI();
+};
+
+// ========== load text ==========
 const readTxt = async () => {
-  const [enRes, esRes] = await Promise.all([fetch("assets/text-en.txt"), fetch("assets/text-es.txt")]);
+  try {
+    const [enRes, esRes] = await Promise.all([fetch("assets/text_en.txt"), fetch("assets/text_es.txt")]);
 
-  const [enText, esText] = await Promise.all([enRes.text(), esRes.text()]);
+    const [enText, esText] = await Promise.all([enRes.text(), esRes.text()]);
 
-  const lines_en = enText.split("\r");
-  const lines_es = esText.split("\r");
+    const lines_en = enText.split(/\r?\n/);
+    const lines_es = esText.split(/\r?\n/);
 
-  const main_en = document.querySelector(".main_en");
-  const main_es = document.querySelector(".main_es");
+    const text_en = document.querySelector(".text_en");
+    const text_es = document.querySelector(".text_es");
 
-  renderText(main_en, lines_en, true);
-  renderText(main_es, lines_es, false);
+    renderText(text_en, lines_en, true);
+    renderText(text_es, lines_es, false);
 
-  setupNavigation();
+    setupNavigation();
+  } catch (error) {
+    console.error("Error loading text files:", error);
+  }
 };
 
 readTxt();
 
-// ========== navigation ==========
-let currentIndex = 0;
-
-const setupNavigation = () => {
-  const p_en = document.querySelectorAll(".main_en p");
-  const p_es = document.querySelectorAll(".main_es p");
-
-  if (!p_en.length || !p_es.length) return;
-
-  const updateUI = () => {
-    p_en.forEach((el) => el.classList.remove("p"));
-    p_es.forEach((el) => el.classList.remove("p"));
-
-    currentIndex = Math.max(0, Math.min(currentIndex, p_en.length - 1));
-
-    p_en[currentIndex].classList.add("p");
-    p_es[currentIndex].classList.add("p");
-
-    p_en[currentIndex].scrollIntoView({ block: "center" });
-    p_es[currentIndex].scrollIntoView({ block: "center" });
-
-    document.querySelector("footer").innerHTML = `
-      <span>${currentIndex} / ${p_en.length - 1}</span>
-    `;
-  };
-
-  updateUI();
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowUp") {
-      currentIndex--;
-      e.preventDefault();
-    } else if (e.key === "ArrowDown") {
-      currentIndex++;
-      e.preventDefault();
-    } else {
-      return;
-    }
-    updateUI();
-  });
-};
-
-// ========== audio controls ==========
-const audio = document.querySelector("#bible");
-
+// ========== keyboard controls ==========
 document.addEventListener("keydown", (e) => {
-  if (e.code === "Space" || e.code === "ArrowRight") {
-    e.preventDefault();
-    audio.play();
-  } else if (e.key === "Enter" || e.code === "Escape") {
-    e.preventDefault();
-    audio.pause();
-  } else if (e.key === "Home" || e.code === "ArrowLeft") {
-    e.preventDefault();
-    audio.pause();
-    audio.currentTime = 0;
-    window.scrollTo(0, 0);
+  switch (e.key) {
+    // navigation
+    case "ArrowUp":
+      currentIndex--;
+      updateUI();
+      e.preventDefault();
+      break;
+
+    case "ArrowDown":
+      currentIndex++;
+      updateUI();
+      e.preventDefault();
+      break;
+
+    // audio play
+    case " ":
+      if (audio.paused) {
+        audio.play();
+      } else {
+        audio.pause();
+      }
+
+      e.preventDefault();
+      break;
+      
+    case "ArrowRight":
+      audio.play();
+      e.preventDefault();
+      break;
+
+    // audio pause
+    case "Enter":
+    case "Escape":
+      audio.pause();
+      e.preventDefault();
+      break;
+
+    // restart
+    case "Home":
+    case "ArrowLeft":
+      audio.pause();
+      audio.currentTime = 0;
+      currentIndex = 0;
+      updateUI();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+      e.preventDefault();
+      break;
   }
 });
 
 // ========== progress bar ==========
-let timer;
+const progress_bar = document.getElementById("progress_bar");
 
-const updateProgress = (duration, el) => {
-  const progress = document.getElementById("progress");
-  const percent = Math.min((el.currentTime / duration) * 100, 100);
-  progress.style.width = percent + "%";
+let timer = null;
 
-  timer = setTimeout(() => updateProgress(duration, el), 100);
+const updateProgress = () => {
+  if (!audio.duration) return;
+
+  const percent = Math.min((audio.currentTime / audio.duration) * 100, 100);
+
+  progress_bar.style.width = `${percent}%`;
+
+  timer = setTimeout(updateProgress, 100);
 };
 
-audio.addEventListener("playing", (e) => {
+audio.addEventListener("playing", () => {
   clearTimeout(timer);
-  updateProgress(e.target.duration, audio);
+  updateProgress();
 });
 
-audio.addEventListener("pause", () => clearTimeout(timer));
+audio.addEventListener("pause", () => {
+  clearTimeout(timer);
+});
 
-// ========== time display ==========
-const currentTimeDOM = document.querySelector(".currentTimeDOM");
-const durationDOM = document.querySelector(".durationDOM");
-
-const formatTime = (t) => {
-  const min = Math.floor(t / 60);
-  const sec = String(t % 60).padStart(2, "0");
-  return `${min}:${sec}`;
-};
-
-audio.addEventListener("timeupdate", () => {
-  currentTimeDOM.textContent = formatTime(Math.floor(audio.currentTime));
-  durationDOM.textContent = formatTime(Math.floor(audio.duration || 0));
+audio.addEventListener("ended", () => {
+  clearTimeout(timer);
+  progress_bar.style.width = "100%";
 });

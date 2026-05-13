@@ -1,215 +1,191 @@
-/* Import custom fonts from Google Fonts */
-@import url("https://fonts.googleapis.com/css2?family=Protest+Revolution&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+/* ========== fonts ========== */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap");
 
-/* Reset default styles and apply global font */
-* {
+/* ========== reset ========== */
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
-  /* border: 1px dashed #0808; */
   box-sizing: border-box;
-  font-family: "Roboto", sans-serif;
 }
 
-/* Center main content using body as flex container */
+/* ========== variables ========== */
+:root {
+  --max-width: 40em;
+
+  --color-text: #ffffff;
+  --color-translate: rgb(247, 188, 41);
+
+  --overlay: #0007;
+
+  --progress-bg: #ffffff33;
+  --progress-fill: #ffffff;
+}
+
+/* ========== body ========== */
 body {
   min-height: 100vh;
+
   display: flex;
-  align-items: center; /* vertical center */
-  justify-content: center; /* horizontal center */
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  text-align: center;
+
+  color: var(--color-text);
+
+  font-family: "Roboto", sans-serif;
+  font-size: 2vw;
 
   background-color: indigo;
-  color: white;
-  font:
-    normal 2vw "Roboto",
-    sans-serif;
-  --max-width: 40em;
-  text-align: center;
-  overflow: hidden;
 }
 
-/* Dark overlay layer on top of background image */
-body::after {
-  content: "";
-  position: absolute;
-  background-color: #0006;
-  width: 100%;
-  height: 100%;
-  inset: 0;
-  z-index: -1;
-}
-
+/* ========== cinematic background ========== */
 body::before {
   content: "";
+
   position: fixed;
   inset: 0;
-  background-image: url(assets/bg.jpg);
+
+  background-image: url("assets/bg.jpg");
   background-size: cover;
   background-position: center;
+
   z-index: -2;
 
   animation: bgCinematic 25s ease-in-out infinite alternate;
 }
 
-/* Combined pan + zoom animation */
+body::after {
+  content: "";
+
+  position: fixed;
+  inset: 0;
+
+  background: var(--overlay);
+
+  z-index: -1;
+}
+
 @keyframes bgCinematic {
-  0% {
+  from {
     transform: scale(1) translate(0, 0);
   }
-  100% {
+
+  to {
     transform: scale(1.1) translate(-2%, -2%);
   }
 }
 
-/* Main container centered with vertical layout */
-section {
-  height: 100vh;
+/* ========== layout ========== */
+.lyric_section {
+  width: 100%;
+  max-width: var(--max-width);
+
+  margin-inline: auto;
+  padding-inline: 1rem;
+
   display: flex;
-  justify-content: center;
   flex-direction: column;
-  width: var(--max-width);
-  margin: auto;
+  align-items: center;
+  justify-content: center;
+
+  gap: 1rem;
 }
 
-/* Hide line breaks by default */
-br {
-  display: none;
-}
-
-/* Hide all paragraphs by default */
+/* ========== text visibility ========== */
+br,
 p {
   display: none;
 }
 
-/* Show active paragraph only */
 .p {
   display: block;
-  margin: 0;
-  padding: 0;
 }
 
-/* English text styling (main focus text) */
-.main_en p {
-  font-weight: 900;
+/* ========== english text ========== */
+.text_en p {
   font-size: 2.8em;
-  padding: 1em;
-  color: white;
-  margin: 0;
-  padding: 0;
+  font-weight: 900;
+  line-height: 1.2;
+
+  color: var(--color-text);
 }
 
-/* Spanish text styling (secondary translation text) */
-.main_es p {
-  font-weight: 700;
-  color: rgb(247, 188, 41);
-  bottom: 1em;
+/* ========== spanish text ========== */
+.text_es p {
   font-size: 1.4em;
-  padding: 0.5em;
-  margin: 1em 0;
-  background: #0002;
+  font-weight: 700;
+  line-height: 1.4;
+
+  color: var(--color-translate);
 }
 
-/* ========== Select control ========== */
-
-/* Position and hide select by default */
-select {
+/* ========== progress bar ========== */
+.progress_bar_container {
   position: fixed;
-  bottom: 0.3em;
-  right: 0.3em;
-  padding: 0.3em;
-  opacity: 0;
-  font-size: 1em;
-  margin: 1em;
-}
-
-/* Show select on hover for interaction */
-select:hover {
-  opacity: 1;
-  cursor: pointer;
-}
-
-/* ========== Progress Bar ========== */
-
-/* Background track for progress bar */
-.progress-container {
-  background-color: #fff4;
-  width: 100%;
-  height: 3px;
-  z-index: 0;
-  position: absolute;
-  opacity: 0.2;
   top: 0;
-  /* bottom: 0; */
-}
+  left: 0;
 
-/* Foreground progress indicator */
-.progress {
-  width: 1px;
-  height: 3px;
-  background: #fff;
-  opacity: 0.9;
-  transition: width 0.1s linear;
-  position: fixed;
-  z-index: 1;
-}
-
-/* ========== Chapter indicator ========== */
-
-/* Circular chapter badge in top-left corner */
-.chapter {
-  position: absolute;
-  font-size: 2em;
-  left: 0.5em;
-  top: 0.5em;
-  color: #fffa;
-  width: 1.3em;
-  height: 1.3em;
-  background-color: #0008;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-
-/* Hide inner chapter text by default */
-.chapter span {
-  padding: 1em;
-  display: none;
-}
-
-/* ========== Footer and time display ========== */
-
-/* Shared styles for footer and time badge */
-footer,
-.chapter_time {
-  font-size: 1em;
-  background-color: #0008;
-  padding: 0.3em 0.7em;
-  color: #fff8;
-  position: fixed;
-  border-radius: 1em;
-}
-
-/* Footer positioned bottom-left */
-footer {
-  left: 1em;
-  bottom: 1em;
-}
-
-/* Time display positioned bottom-right */
-.chapter_time {
-  bottom: 1em;
-  right: 1em;
-}
-
-/* Main lyric container centered and constrained */
-.lyric_section {
   width: 100%;
-  max-width: var(--max-width);
-  margin: 0 auto;
+  height: 3px;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  background: var(--progress-bg);
+
+  z-index: 10;
+}
+
+.progress_bar {
+  width: 0;
+  height: 100%;
+
+  background: var(--progress-fill);
+
+  transition: width 0.1s linear;
+}
+
+/* ========== audio footer ========== */
+#audio_player {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ========== responsive ========== */
+@media (max-width: 768px) {
+  body {
+    font-size: 4vw;
+  }
+
+  .text_en p {
+    font-size: 2.2em;
+  }
+
+  .text_es p {
+    font-size: 1.2em;
+  }
+
+  .lyric_section {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 5vw;
+  }
+
+  .text_en p {
+    font-size: 1.8em;
+  }
+
+  .text_es p {
+    font-size: 1em;
+  }
 }
